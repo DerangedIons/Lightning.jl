@@ -1,0 +1,14 @@
+name = "Lightning"
+uuid = "076478a6-6ac3-4d94-9ef3-ef1796748abb"
+authors = ["Kyle Beggs (beggskw@gmail.com) and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.10"
+
+[extras]
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["JET", "Test"]
