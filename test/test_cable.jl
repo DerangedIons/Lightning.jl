@@ -32,7 +32,7 @@ never does), alongside the final voltage profile.
 function run_cable(side::Symbol)
     grid = cable_grid()
     model = MonodomainModel(;
-        κ=CABLE_κ, ion=ParametrizedFHNModel(), stim=cable_stimulus(side)
+        κ=CABLE_κ, ion=FHNModel(), stim=cable_stimulus(side)
     )
     f = semidiscretize(
         ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid
@@ -131,7 +131,7 @@ end
     weak = TransmembraneStimulationProtocol(
         (x, t) -> (t <= 2.0 && x[1] <= 1.0) ? 0.02 : 0.0; nonzero_intervals=((0.0, 2.0),)
     )
-    model = MonodomainModel(; κ=CABLE_κ, ion=ParametrizedFHNModel(), stim=weak)
+    model = MonodomainModel(; κ=CABLE_κ, ion=FHNModel(), stim=weak)
     f = semidiscretize(
         ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid
     )

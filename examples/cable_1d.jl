@@ -22,7 +22,7 @@ using Pkg
 Pkg.activate(@__DIR__)
 
 using Lightning
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 using OrdinaryDiffEqLowOrderRK: Euler
 using CairoMakie, Printf
 
@@ -54,7 +54,7 @@ function build_cable()
         (x, t) -> (t <= STIM_DURATION && x[1] <= STIM_WIDTH) ? STIM_AMPLITUDE : 0.0;
         nonzero_intervals=((0.0, STIM_DURATION),),
     )
-    model = MonodomainModel(; κ, ion=ParametrizedFHNModel(), stim)
+    model = MonodomainModel(; κ, ion=FHNModel(), stim)
     return semidiscretize(
         ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid
     )

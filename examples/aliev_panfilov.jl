@@ -17,7 +17,7 @@ using CytoZoo: CytoZoo, SpatialContext, Stimulus
 
 Aliev–Panfilov kinetics. `V` runs over roughly `[0, 1]` and time is dimensionless.
 
-Following the same convention as `CytoZoo.ParametrizedFHNModel`: the parameters are plain
+Following the same convention as `CytoZoo.FHNModel`: the parameters are plain
 isbits fields, and `stim` defaults to zero amplitude because in tissue the stimulus belongs
 to the framework's diffusion half. The sign convention is CytoZoo's — `Istim` is subtracted
 from `dV/dt`, so a *negative* amplitude depolarizes.

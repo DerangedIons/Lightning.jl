@@ -2,7 +2,7 @@ const PIPELINE_GRID = CartesianGrid(((0.0, 10.0),), (32,); bc=((Neumann(), Neuma
 
 "A small FHN cable semidiscretization, rebuilt per testset (prepared operators are stateful)."
 function fhn_pipeline(; stim=NoStimulationProtocol(), κ=0.1, overrides=nothing)
-    model = MonodomainModel(; κ, ion=ParametrizedFHNModel(), stim)
+    model = MonodomainModel(; κ, ion=FHNModel(), stim)
     split = if overrides === nothing
         ReactionDiffusionSplit(model)
     else
@@ -39,7 +39,7 @@ end
 @testset "Pipeline — create_initial_condition / getvariable / setvariable!" begin
     f = fhn_pipeline()
     n = num_nodes(f)
-    ion = ParametrizedFHNModel()
+    ion = FHNModel()
     u₀ = create_initial_condition(f)
 
     @test eltype(u₀) == Float64
@@ -96,7 +96,7 @@ end
     @test all(iszero, du)
 
     # Cₘ divides the applied current.
-    model = MonodomainModel(; κ=0.1, Cₘ=2.0, ion=ParametrizedFHNModel(), stim)
+    model = MonodomainModel(; κ=0.1, Cₘ=2.0, ion=FHNModel(), stim)
     f2 = semidiscretize(
         ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), PIPELINE_GRID
     )
@@ -181,7 +181,7 @@ end
 end
 
 @testset "Pipeline — rejected configurations" begin
-    ion = ParametrizedFHNModel()
+    ion = FHNModel()
 
     # Boundary conditions: v0 is zero-flux only, and the message must name the face.
     dirichlet = CartesianGrid(((0.0, 1.0),), (8,); bc=((Dirichlet(), Neumann()),))
@@ -240,10 +240,10 @@ end
 @testset "Pipeline — warns when the cell model still carries a stimulus" begin
     # Double stimulation with opposite sign conventions is the failure this guards against,
     # and it is silent without the warning.
-    live = ParametrizedFHNModel(; stim=Stimulus(; amplitude=-0.5))
+    live = FHNModel(; stim=Stimulus(; amplitude=-0.5))
     @test_logs (:warn,) MonodomainModel(; κ=1.0, ion=live)
 
-    quiet = ParametrizedFHNModel()      # zero-amplitude default
+    quiet = FHNModel()      # zero-amplitude default
     @test_logs MonodomainModel(; κ=1.0, ion=quiet)
 end
 

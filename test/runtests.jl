@@ -9,7 +9,7 @@ using MatrixFreeOperators: MatrixFreeOperators
 using OrdinaryDiffEqOperatorSplitting: OrdinaryDiffEqOperatorSplitting
 using CytoZoo: CytoZoo
 
-using CytoZoo: ParametrizedFHNModel, SpatialStep, Stimulus
+using CytoZoo: FHNModel, SpatialStep, Stimulus
 using OrdinaryDiffEqLowOrderRK: Euler
 
 include("testutils.jl")

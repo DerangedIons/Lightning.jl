@@ -17,7 +17,7 @@ Lightning solves the monodomain equation
 \end{aligned}
 ```
 
-by reaction-diffusion operator splitting. [MatrixFreeOperators.jl](https://github.com/DerangedIons/MatrixFreeOperators.jl)
+by reaction-diffusion operator splitting. [MatrixFreeOperators.jl](https://github.com/RallypointOne/MatrixFreeOperators.jl)
 supplies the spatial operators, [CytoZoo.jl](https://github.com/DerangedIons/CytoZoo.jl) the
 cell kinetics, and [OrdinaryDiffEqOperatorSplitting.jl](https://github.com/SciML/OrdinaryDiffEqOperatorSplitting.jl)
 the splitting.
@@ -41,7 +41,7 @@ Four objects, in order.
 
 ```julia
 using Lightning
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 using OrdinaryDiffEqLowOrderRK: Euler
 
 grid = CartesianGrid(((0.0, 20.0),), (400,); bc = ((Neumann(), Neumann()),))
@@ -51,7 +51,7 @@ stim = TransmembraneStimulationProtocol(
     nonzero_intervals = ((0.0, 2.0),),
 )
 
-model = MonodomainModel(; κ = 0.1, ion = ParametrizedFHNModel(), stim)
+model = MonodomainModel(; κ = 0.1, ion = FHNModel(), stim)
 f = semidiscretize(ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid)
 
 prob = OperatorSplittingProblem(f, create_initial_condition(f), (0.0, 400.0))
@@ -87,8 +87,8 @@ to check the 19-state port against published single-cell targets.
 
 State-blocked (structure of arrays), matching Thunderbolt's `StateBlockedLayout`:
 
-```
-u = [φₘ(1:N); s₁(1:N); s₂(1:N); … ; s_{M-1}(1:N)]
+```math
+u = \left[\varphi_\mathrm{m}(1{:}N);\; s_1(1{:}N);\; s_2(1{:}N);\; \ldots;\; s_{M-1}(1{:}N)\right]
 ```
 
 Every state is contiguous, so the diffusion half acts on the leading block `1:N` — no gather,

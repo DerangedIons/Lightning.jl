@@ -53,16 +53,16 @@ the stimulus as `Iₛₜᵢₘ/Cₘ`.
 ### Examples
 
 ```julia
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 
-model = MonodomainModel(; κ = 1.0e-3, ion = ParametrizedFHNModel())
+model = MonodomainModel(; κ = 1.0e-3, ion = FHNModel())
 
 # fibres along x, three-dimensional anisotropy
 model = MonodomainModel(;
     κ = (0.133, 0.0176, 0.0176),
     χ = 140.0,
     Cₘ = 0.01,
-    ion = ParametrizedFHNModel(),
+    ion = FHNModel(),
 )
 ```
 
