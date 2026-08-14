@@ -11,10 +11,11 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
-# Lightning, CytoZoo, and MatrixFreeOperators are unregistered, so they are resolved by
-# path. This assumes the three checkouts are siblings, which is the layout `JULIA_PKG_DEVDIR`
-# produces.
+# Lightning, CytoZoo, and MatrixFreeOperators are unregistered, so they need explicit
+# sources. Lightning travels with this checkout and resolves by path; the other two come
+# from their repos, so `Pkg.instantiate()` works for anyone cloning rather than only on a
+# machine whose `JULIA_PKG_DEVDIR` happens to hold sibling checkouts.
 [sources]
-CytoZoo = {path = "../../CytoZoo"}
+CytoZoo = {url = "https://github.com/DerangedIons/CytoZoo.jl", rev = "main"}
 Lightning = {path = ".."}
-MatrixFreeOperators = {path = "../../MatrixFreeOperators"}
+MatrixFreeOperators = {url = "https://github.com/RallypointOne/MatrixFreeOperators.jl", rev = "main"}
