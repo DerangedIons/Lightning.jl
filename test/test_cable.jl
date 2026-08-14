@@ -77,9 +77,13 @@ end
     @test all(!isnan, left.activation)
     @test maximum(left.peak) > 0.9                      # a real upstroke, not a smear
 
-    # Direction: the stimulated end goes first, the far end last.
-    @test argmin(left.activation) == 1
-    @test argmax(left.activation) == CABLE_NODES
+    # Direction: the stimulated end goes first, the far end last. Asserted as attainment
+    # rather than `argmin`/`argmax`, because activation times are quantized to CABLE_DT and
+    # every node under the stimulus footprint crosses threshold in the same step — the
+    # extremum is a plateau, and `argmin` would silently pick whichever end of it comes
+    # first in index order.
+    @test left.activation[1] == minimum(left.activation)
+    @test left.activation[CABLE_NODES] == maximum(left.activation)
     @test left.activation[1] <= 2.0                     # within the stimulus window itself
 
     # Monotone in x — the property that distinguishes a propagating wave from a domain that
@@ -114,8 +118,8 @@ end
     right = run_cable(:right)
 
     @test all(!isnan, right.activation)
-    @test argmin(right.activation) == CABLE_NODES
-    @test argmax(right.activation) == 1
+    @test right.activation[CABLE_NODES] == minimum(right.activation)
+    @test right.activation[1] == maximum(right.activation)
     @test all(<=(0), diff(right.activation))
 
     mirrored = reverse(right.activation)
