@@ -59,11 +59,14 @@ include("models.jl")
 include("discretization.jl")
 include("reaction.jl")
 include("semidiscretize.jl")
+include("solution.jl")
 
 # Lightning's own vocabulary
 export AbstractEPModel, MonodomainModel, ReactionDiffusionSplit
 export AbstractStimulationProtocol, NoStimulationProtocol, TransmembraneStimulationProtocol
 export FiniteDifferenceDiscretization, semidiscretize, diffusion_operator, node_coordinates
+export create_initial_condition,
+    getvariable, setvariable!, solution_size, num_nodes, variable_range
 
 # Re-exported mesh vocabulary, so `using Lightning` is enough to build a problem.
 export CartesianGrid, Dirichlet, Neumann, Periodic
