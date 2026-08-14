@@ -57,6 +57,7 @@ using SciMLBase: ODEFunction, init, solve!, step!
 include("stimulus.jl")
 include("models.jl")
 include("discretization.jl")
+include("reaction.jl")
 
 # Lightning's own vocabulary
 export AbstractEPModel, MonodomainModel, ReactionDiffusionSplit
