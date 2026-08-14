@@ -1,2 +1,9 @@
 # See https://domluna.github.io/JuliaFormatter.jl/stable/ for a list of options
 style = "blue"
+
+# The ten Tusscher kinetics are a verbatim port of the validated implementation in
+# MatrixFreeOperators.jl. Keeping them byte-identical is what makes the two files diffable,
+# which is how the port is checked; blue style would break every long current expression
+# across a dozen lines and destroy that. The CytoZoo wrapper around them is hand-formatted
+# to match.
+ignore = ["examples/ten_tusscher_2006.jl"]
