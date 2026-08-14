@@ -2,9 +2,28 @@ using Lightning
 using Test
 using JET
 
+# Explicit imports, as in the package itself: MatrixFreeOperators exports `solve` and
+# `gradient`, and `using` it wholesale would shadow the SciML stack.
+using KernelAbstractions: KernelAbstractions
+using MatrixFreeOperators: MatrixFreeOperators
+using OrdinaryDiffEqOperatorSplitting: OrdinaryDiffEqOperatorSplitting
+using CytoZoo: CytoZoo
+
+using CytoZoo: ParametrizedFHNModel, SpatialStep, Stimulus
+using OrdinaryDiffEqLowOrderRK: Euler
+
+include("testutils.jl")
+
 @testset "Lightning.jl" begin
     @testset "Code linting (JET.jl)" begin
-        JET.test_package(Lightning; target_defined_modules = true)
+        # `target_modules` rather than the template's `target_defined_modules = true`: JET
+        # 0.12 dropped that configuration name (it validates configs strictly and throws a
+        # `JETConfigError`). This is the same restriction — report only problems inside
+        # Lightning's own module context, not inside its dependencies.
+        JET.test_package(Lightning; target_modules=(Lightning,))
     end
-    # Write your tests here.
+    include("test_pipeline.jl")
+    include("test_diffusion.jl")
+    include("test_cable.jl")
+    include("test_gpu.jl")
 end
