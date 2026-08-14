@@ -1,14 +1,38 @@
 name = "Lightning"
 uuid = "076478a6-6ac3-4d94-9ef3-ef1796748abb"
-authors = ["Kyle Beggs (beggskw@gmail.com) and contributors"]
 version = "0.1.0"
+authors = ["Kyle Beggs (beggskw@gmail.com) and contributors"]
+
+[deps]
+Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
+CytoZoo = "ff4ab244-b974-488c-a5cc-2c6c87261b37"
+KernelAbstractions = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MatrixFreeOperators = "bf251007-91fc-422b-8727-f8d5215c1c76"
+OrdinaryDiffEqOperatorSplitting = "760fc936-9fa0-4281-9c1a-468957eedc89"
+SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
+Adapt = "4"
+CUDA = "5, 6"
+CytoZoo = "0.0.1"
+JET = "0.12"
+KernelAbstractions = "0.9"
+LinearAlgebra = "1"
+MatrixFreeOperators = "0.1"
+OrdinaryDiffEqLowOrderRK = "1.7, 2"
+OrdinaryDiffEqOperatorSplitting = "0.4"
+SciMLBase = "2.77, 3"
+StaticArrays = "1"
+Test = "1"
 julia = "1.10"
 
 [extras]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+OrdinaryDiffEqLowOrderRK = "1344f307-1e59-4825-a18e-ace9aa3fa4c6"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["JET", "Test"]
+test = ["CUDA", "JET", "OrdinaryDiffEqLowOrderRK", "Test"]
