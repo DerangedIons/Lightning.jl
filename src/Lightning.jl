@@ -58,14 +58,22 @@ include("stimulus.jl")
 include("models.jl")
 include("discretization.jl")
 include("reaction.jl")
+include("semidiscretize.jl")
 
 # Lightning's own vocabulary
 export AbstractEPModel, MonodomainModel, ReactionDiffusionSplit
 export AbstractStimulationProtocol, NoStimulationProtocol, TransmembraneStimulationProtocol
-export FiniteDifferenceDiscretization
+export FiniteDifferenceDiscretization, semidiscretize, diffusion_operator, node_coordinates
 
 # Re-exported mesh vocabulary, so `using Lightning` is enough to build a problem.
 export CartesianGrid, Dirichlet, Neumann, Periodic
 export boundary_conditions, cell_center, dimension, interior, local_size, spacing
+
+# Re-exported splitting vocabulary, for the same reason. `init`/`step!`/`solve!` but
+# deliberately not `solve`: the operator-splitting integrator does not implement the SciML
+# solution interface, so there is no `sol` object to hand back. Sample it over time with
+# `SciMLIterators.TimeChoiceIterator(integrator, ts)` instead.
+export GenericSplitFunction, OperatorSplittingProblem, LieTrotterGodunov, StrangMarchuk
+export init, solve!, step!
 
 end # module
