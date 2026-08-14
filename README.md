@@ -70,7 +70,25 @@ while integrator.t < 400.0
 end
 ```
 
-`examples/cable_1d.jl` is this with reporting and a figure attached.
+## Examples
+
+`julia --project=examples -t auto examples/<name>.jl`
+
+| | |
+|---|---|
+| `cable_1d.jl` | the snippet above with reporting and a figure — one FitzHugh–Nagumo cable, one propagating action potential |
+| `spiral_2d.jl` | a reentrant spiral from an S1–S2 cross-field protocol, Aliev–Panfilov kinetics on an 80×80 sheet |
+| `niederer_benchmark.jl` | the Niederer et al. (2011) N-version benchmark: a 3D anisotropic slab with ten Tusscher–Panfilov 2006 kinetics, activation times at nine reference points compared against an independent finite-difference solve |
+
+The last two are ports of the corresponding MatrixFreeOperators.jl examples, which run the
+same physics on an adaptive block forest through a hand-rolled Godunov split. Reading a pair
+side by side is the fastest way to see what the pipeline buys and what the structured-grid
+restriction costs.
+
+Their cell models — `aliev_panfilov.jl` and `ten_tusscher_2006.jl` — live in `examples/`
+rather than in CytoZoo because they are here to drive figures. Run
+`julia --project=examples examples/ten_tusscher_2006.jl` on its own to check the TT06 port
+against single-cell targets.
 
 ## The solution vector
 
