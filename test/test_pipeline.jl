@@ -27,7 +27,7 @@ end
 
     @test variable_range(f, :φₘ) == 1:n
     @test variable_range(f, :v) == 1:n          # the cell model's own name for the same state
-    @test variable_range(f, :s) == (n + 1):(2n) # the whole non-voltage block
+    @test variable_range(f, :states) == (n + 1):(2n) # the whole non-voltage block
     @test_throws ArgumentError variable_range(f, :not_a_state)
 
     # Node i's full state is the stride i, i+n, …, which is what the reaction kernel slices.
@@ -56,14 +56,17 @@ end
         x[1]
     end
     @test getvariable(u₀, f, :φₘ) ≈ [x[1] for x in xs]
-    @test all(==(0.0), getvariable(u₀, f, :s))      # the other block is untouched
+    @test all(==(0.0), getvariable(u₀, f, :states)) # the other block is untouched
 
+    # `:s` is FHN's own second state, `:states` the whole non-voltage block. They coincide
+    # here only because FHN has exactly one non-voltage state; the point of the plural
+    # default is that the two names stay distinct on a model that has more.
     setvariable!(u₀, f, :s, -1.5)
-    @test all(==(-1.5), getvariable(u₀, f, :s))
+    @test all(==(-1.5), getvariable(u₀, f, :states))
     @test getvariable(u₀, f, :φₘ) ≈ [x[1] for x in xs]
 
     # A single function of position cannot fill a multi-state block.
-    @test_throws ArgumentError setvariable!(identity, u₀, f, :s)
+    @test_throws ArgumentError setvariable!(identity, u₀, f, :states)
     @test_throws ArgumentError setvariable!(u₀, f, :nope, 1.0)
 
     @test create_initial_condition(f, Float32) isa Vector{Float32}

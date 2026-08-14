@@ -82,7 +82,7 @@ View of one named block of the solution vector.
 
 `name` is a cell-model state name, the model's `φ_symbol` (`:φₘ` by default, aliasing
 whichever state the cell model reports as the transmembrane potential), or its
-`state_symbol` (`:s` by default) for the whole non-voltage block.
+`state_symbol` (`:states` by default) for the whole non-voltage block.
 
 Being a view, writing through it writes the solution.
 
@@ -90,7 +90,7 @@ Being a view, writing through it writes the solution.
 
 ```julia
 φ = getvariable(u, f, :φₘ)      # length N
-s = getvariable(u, f, :s)       # length N*(M-1), all non-voltage states
+s = getvariable(u, f, :states)  # length N*(M-1), all non-voltage states
 w = getvariable(u, f, :CaMKt)   # length N, one named state
 ```
 """

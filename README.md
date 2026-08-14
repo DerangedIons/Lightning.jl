@@ -109,7 +109,7 @@ Reach into it by name rather than by index:
 ```julia
 create_initial_condition(f)             # every node at the cell model's default state
 getvariable(u, f, :φₘ)                  # view of the voltage block
-getvariable(u, f, :s)                   # view of every non-voltage state
+getvariable(u, f, :states)              # view of every non-voltage state
 setvariable!(u, f, :φₘ) do x            # impose a profile
     x[1] < 1.0 ? 1.0 : 0.0
 end
