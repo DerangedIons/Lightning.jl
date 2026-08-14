@@ -24,10 +24,10 @@ if GPU_AVAILABLE
         stim = TransmembraneStimulationProtocol(
             (x, t) -> (t <= 2.0 && x[1] <= 1.0) ? 0.5 : 0.0; nonzero_intervals=((0.0, 2.0),)
         )
-        # `ParametrizedFHNModel` is isbits, so the whole cell model rides into the kernel by
+        # `FHNModel` is isbits, so the whole cell model rides into the kernel by
         # value. `ToRORd` holds a heap `Vector` of parameters and does not; that is the
         # known gap this test deliberately does not paper over.
-        ion = ParametrizedFHNModel()
+        ion = FHNModel()
         @test isbitstype(typeof(ion))
 
         build_gpu_cable(device) = semidiscretize(
@@ -83,7 +83,7 @@ if GPU_AVAILABLE
         overrides = (a=SpatialStep(1, 10.0, 0.05, 0.5),)
         build_override_cable(device) = semidiscretize(
             ReactionDiffusionSplit(
-                MonodomainModel(; κ=0.1, ion=ParametrizedFHNModel()), overrides
+                MonodomainModel(; κ=0.1, ion=FHNModel()), overrides
             ),
             FiniteDifferenceDiscretization(),
             CartesianGrid(((0.0, 20.0),), (n,); bc=((Neumann(), Neumann()),), device),

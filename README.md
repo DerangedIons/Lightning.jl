@@ -9,12 +9,16 @@ Cardiac tissue electrophysiology on orthogonal, structured grids.
 
 Lightning solves the monodomain equation
 
-```
-χCₘ∂ₜφₘ = ∇⋅κ∇φₘ + χ(Iᵢₒₙ(φₘ, s, t) + Iₛₜᵢₘ(x, t))
-                 ∂ₜs = f(φₘ, s, t)
+```math
+\begin{aligned}
+\chi C_\mathrm{m} \partial_t \varphi_\mathrm{m}
+    &= \nabla\cdot\kappa\nabla\varphi_\mathrm{m}
+     + \chi\left(I_\mathrm{ion}(\varphi_\mathrm{m}, s, t) + I_\mathrm{stim}(x, t)\right) \\
+\partial_t s &= f(\varphi_\mathrm{m}, s, t)
+\end{aligned}
 ```
 
-by reaction-diffusion operator splitting: [MatrixFreeOperators.jl](https://github.com/DerangedIons/MatrixFreeOperators.jl)
+by reaction-diffusion operator splitting: [MatrixFreeOperators.jl](https://github.com/RallypointOne/MatrixFreeOperators.jl)
 supplies the spatial operators, [CytoZoo.jl](https://github.com/DerangedIons/CytoZoo.jl) the cell
 kinetics, and [OrdinaryDiffEqOperatorSplitting.jl](https://github.com/SciML/OrdinaryDiffEqOperatorSplitting.jl)
 the splitting itself.
@@ -42,7 +46,7 @@ conduction-velocity and pseudo-ECG post-processing.
 
 ```julia
 using Lightning
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 using OrdinaryDiffEqLowOrderRK: Euler
 
 # 1. A grid. Cell-centered, uniform, zero flux at both ends.
@@ -57,7 +61,7 @@ stim = TransmembraneStimulationProtocol(
 )
 
 # 3. The continuous problem, then how to split it, then the semidiscretization.
-model = MonodomainModel(; κ = 0.1, ion = ParametrizedFHNModel(), stim)
+model = MonodomainModel(; κ = 0.1, ion = FHNModel(), stim)
 f = semidiscretize(ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid)
 
 # 4. Solve. Diffusion and reaction each get their own inner algorithm.
@@ -94,8 +98,8 @@ against single-cell targets.
 
 State-blocked (structure of arrays), matching Thunderbolt's `StateBlockedLayout`:
 
-```
-u = [φₘ(1:N); s₁(1:N); s₂(1:N); … ; s_{M-1}(1:N)]
+```math
+u = \left[\varphi_\mathrm{m}(1{:}N);\; s_1(1{:}N);\; s_2(1{:}N);\; \ldots;\; s_{M-1}(1{:}N)\right]
 ```
 
 Every state is contiguous, so the diffusion half acts on the leading block `1:N` with no
@@ -105,7 +109,7 @@ Reach into it by name rather than by index:
 ```julia
 create_initial_condition(f)             # every node at the cell model's default state
 getvariable(u, f, :φₘ)                  # view of the voltage block
-getvariable(u, f, :s)                   # view of every non-voltage state
+getvariable(u, f, :states)              # view of every non-voltage state
 setvariable!(u, f, :φₘ) do x            # impose a profile
     x[1] < 1.0 ? 1.0 : 0.0
 end
@@ -123,7 +127,7 @@ grid = CartesianGrid(((0.0, 20.0),), (400,);
 ```
 
 The reaction half then runs as one KernelAbstractions kernel over the nodes. The cell model
-has to be isbits to ride into it — `CytoZoo.ParametrizedFHNModel` is; `ToRORd`, whose
+has to be isbits to ride into it — `CytoZoo.FHNModel` is; `ToRORd`, whose
 parameters live in a heap `Vector`, is not yet.
 
 ## Precision
@@ -138,7 +142,7 @@ unregistered dependencies:
 
 ```julia
 using Pkg
-Pkg.develop(url = "https://github.com/DerangedIons/MatrixFreeOperators.jl")
+Pkg.develop(url = "https://github.com/RallypointOne/MatrixFreeOperators.jl")
 Pkg.develop(url = "https://github.com/DerangedIons/CytoZoo.jl")
 Pkg.develop(url = "https://github.com/DerangedIons/Lightning.jl")
 ```

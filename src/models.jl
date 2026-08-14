@@ -9,7 +9,7 @@ abstract type AbstractEPModel end
 
 """
     MonodomainModel(; κ, ion, χ = 1, Cₘ = 1, stim = NoStimulationProtocol(),
-                      φ_symbol = :φₘ, state_symbol = :s)
+                      φ_symbol = :φₘ, state_symbol = :states)
 
 The monodomain equation
 
@@ -32,7 +32,8 @@ for transmembrane potential `φₘ` and cell-model states `s`.
   source term, uniformly in every dimension.
 - `φ_symbol`, `state_symbol`: names the solution helpers ([`getvariable`](@ref),
   [`setvariable!`](@ref)) accept for the voltage block and for the whole non-voltage state
-  block.
+  block. `state_symbol` is deliberately plural: a cell model may itself name a state `:s`
+  (CytoZoo's `FHNModel` does), and a singular default would shadow it.
 
 The constructor is **keyword-only on purpose.** Thunderbolt's tutorial calls
 `MonodomainModel(Cₘ, χ, …)` while its fields are ordered `(χ, Cₘ, …)`; the two are
@@ -53,16 +54,16 @@ the stimulus as `Iₛₜᵢₘ/Cₘ`.
 ### Examples
 
 ```julia
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 
-model = MonodomainModel(; κ = 1.0e-3, ion = ParametrizedFHNModel())
+model = MonodomainModel(; κ = 1.0e-3, ion = FHNModel())
 
 # fibres along x, three-dimensional anisotropy
 model = MonodomainModel(;
     κ = (0.133, 0.0176, 0.0176),
     χ = 140.0,
     Cₘ = 0.01,
-    ion = ParametrizedFHNModel(),
+    ion = FHNModel(),
 )
 ```
 
@@ -85,7 +86,7 @@ function MonodomainModel(;
     Cₘ=1,
     stim::AbstractStimulationProtocol=NoStimulationProtocol(),
     φ_symbol::Symbol=:φₘ,
-    state_symbol::Symbol=:s,
+    state_symbol::Symbol=:states,
 )
     _validate_conductivity(κ)
     χ > zero(χ) || throw(ArgumentError("χ must be positive, got $χ"))

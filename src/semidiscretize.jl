@@ -79,10 +79,10 @@ raises an `ArgumentError` naming the offending face.
 ### Examples
 
 ```julia
-using CytoZoo: ParametrizedFHNModel
+using CytoZoo: FHNModel
 
 grid = CartesianGrid(((0.0, 20.0),), (200,); bc = ((Neumann(), Neumann()),))
-model = MonodomainModel(; κ = 1.0e-3, ion = ParametrizedFHNModel())
+model = MonodomainModel(; κ = 1.0e-3, ion = FHNModel())
 f = semidiscretize(ReactionDiffusionSplit(model), FiniteDifferenceDiscretization(), grid)
 u₀ = create_initial_condition(f)
 prob = OperatorSplittingProblem(f, u₀, (0.0, 100.0))
