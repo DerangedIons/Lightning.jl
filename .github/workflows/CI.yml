@@ -19,6 +19,9 @@ jobs:
     permissions: # needed to allow julia-actions/cache to proactively delete old caches that it has created
       actions: write
       contents: read
+    env:
+      # Secrets aren't readable in a step-level `if`, so surface presence here.
+      HAS_APP_KEY: ${{ secrets.DERANGEDIONS_CI_APP_KEY != '' }}
     strategy:
       fail-fast: false
       matrix:
@@ -37,6 +40,11 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v3
+      - name: Authenticate to private DerangedIons deps
+        if: env.HAS_APP_KEY == 'true'
+        uses: DerangedIons/.github/actions/julia-private-deps@main
+        with:
+          app-private-key: ${{ secrets.DERANGEDIONS_CI_APP_KEY }}
       # CytoZoo and MatrixFreeOperators are unregistered, so a bare `instantiate` cannot
       # resolve them. Same repos the README's install block points at.
       - name: Add unregistered dependencies
@@ -62,12 +70,20 @@ jobs:
       actions: write # needed to allow julia-actions/cache to proactively delete old caches that it has created
       contents: write
       statuses: write
+    env:
+      # Secrets aren't readable in a step-level `if`, so surface presence here.
+      HAS_APP_KEY: ${{ secrets.DERANGEDIONS_CI_APP_KEY != '' }}
     steps:
       - uses: actions/checkout@v7
       - uses: julia-actions/setup-julia@v3
         with:
           version: '1'
       - uses: julia-actions/cache@v3
+      - name: Authenticate to private DerangedIons deps
+        if: env.HAS_APP_KEY == 'true'
+        uses: DerangedIons/.github/actions/julia-private-deps@main
+        with:
+          app-private-key: ${{ secrets.DERANGEDIONS_CI_APP_KEY }}
       # Both environments have to resolve the unregistered deps: the root project, built
       # by julia-buildpkg, and docs/, which julia-docdeploy instantiates separately.
       - name: Add unregistered dependencies
